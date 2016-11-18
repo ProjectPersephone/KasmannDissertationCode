@@ -52,10 +52,8 @@ end
 to instrumentSetup
  ;
  ; Set the Initial Instrument Resource Allocations and Utilization Rates
- ; The Initial Resource Values Are Set to a Uniform Random Value Between 0
-and the Value Indicated
- ; The Resource Utilization Rates are Set to a Random Normal Value, With
-Mean and Standard Deviation Indicated
+ ; The Initial Resource Values Are Set to a Uniform Random Value Between 0 and the Value Indicated
+ ; The Resource Utilization Rates are Set to a Random Normal Value, With Mean and Standard Deviation Indicated
  ;
 
  set initialCost (random 50) + 50
@@ -88,8 +86,7 @@ end
 ; Calculate Final Results.
 ; Use Monitors to Display Final Cost Growth, Mass Growth, Power Growth
 ; Use Monitor to Display Final Number of Multi-lateral Barters
-; Use Monitors to Display Final Number of Cost-Mass, Mass-Power, Power-Cost
-Bi-lateral Barters
+; Use Monitors to Display Final Number of Cost-Mass, Mass-Power, Power-Cost Bi-lateral Barters
 ;
 to displayResults
  set totalCost 0
@@ -99,15 +96,11 @@ to displayResults
  set totalPower 0
  set totalInitialPower 0
  set totalCost sum [cost] of Instruments ; Sum Final Cost of All Instruments
- set totalInitialCost sum [initialCost] of Instruments ; Sum Initial Cost of All
-Instruments
+ set totalInitialCost sum [initialCost] of Instruments ; Sum Initial Cost of All Instruments
  set totalMass sum [mass] of Instruments ; Sum Final Mass of All Instruments
- set totalInitialMass sum [initialMass] of Instruments ; Sum Initial Mass of All
-Instruments
- set totalPower sum [power] of Instruments ; Sum Final Power of All
-Instruments
- set totalInitialPower sum [initialPower] of Instruments ; Sum Initial Power of
-All Instruments
+ set totalInitialMass sum [initialMass] of Instruments ; Sum Initial Mass of All Instruments
+ set totalPower sum [power] of Instruments ; Sum Final Power of All Instruments
+ set totalInitialPower sum [initialPower] of Instruments ; Sum Initial Power of All Instruments
  set costGrowth ((totalCost - totalInitialCost) / totalInitialCost) * 100
  set massGrowth ((totalMass - totalInitialMass) / totalInitialMass) * 100
  set powerGrowth ((totalPower - totalInitialPower) / totalInitialPower) * 100
@@ -118,10 +111,8 @@ end
 to currentResourceValues
  ;
  ; Calculate Current Cost, Mass and Power Values
- ; Resource Values Start at the Initial Resource Value at Time = 0, Then Change
-Linearly
- ; Between 0 < Time < 0.75 Max Time, Then Stay Constant Until Max Time Is
-Reached
+ ; Resource Values Start at the Initial Resource Value at Time = 0, Then Change Linearly
+ ; Between 0 < Time < 0.75 Max Time, Then Stay Constant Until Max Time Is Reached
  ;
 
  ask Instruments [
@@ -183,23 +174,18 @@ to doBarter
  set power-cost? false
  ]
  ask Instruments [
- if (mass > initialMass + (initialMass * THRESHOLD)) and (cost < initialCost -
-(initialCost * THRESHOLD))
+ if (mass > initialMass + (initialMass * THRESHOLD)) and (cost < initialCost - (initialCost * THRESHOLD))
  [set mass-cost? true]
- if (mass < initialMass - (initialMass * THRESHOLD)) and (cost > initialCost +
-(initialCost * THRESHOLD))
+ if (mass < initialMass - (initialMass * THRESHOLD)) and (cost > initialCost + (initialCost * THRESHOLD))
  [set cost-mass? true]
- if (mass > initialMass + (initialMass * THRESHOLD)) and (power <
-initialPower - (initialPower * THRESHOLD))
+ if (mass > initialMass + (initialMass * THRESHOLD)) and (power < initialPower - (initialPower * THRESHOLD))
  [set mass-power? true]
  if (mass < initialMass - (initialMass * THRESHOLD)) and (power >
 initialPower + (initialPower * THRESHOLD))
  [set power-mass? true]
- if (cost > initialCost + (initialCost * THRESHOLD)) and (power < initialPower
-- (initialPower * THRESHOLD))
+ if (cost > initialCost + (initialCost * THRESHOLD)) and (power < initialPower - (initialPower * THRESHOLD))
  [set cost-power? true]
- if (cost < initialCost - (initialCost * THRESHOLD)) and (power > initialPower
-+ (initialPower * THRESHOLD))
+ if (cost < initialCost - (initialCost * THRESHOLD)) and (power > initialPower + (initialPower * THRESHOLD))
  [set power-cost? true]
  ]
 
@@ -207,12 +193,9 @@ initialPower + (initialPower * THRESHOLD))
  ; Count Up the Number of Instruments Eligible for Barter
  ;
 
- Set numberEligible ((count Instruments with [mass-cost? = true]) + (count
-Instruments with [cost-mass? = true]) +
- (count Instruments with [mass-power? = true]) + (count Instruments with
-[power-mass? = true])
- + (count Instruments with [cost-power? = true]) + (count Instruments with
-[power-cost? = true]))
+ Set numberEligible ((count Instruments with [mass-cost? = true]) + (count Instruments with [cost-mass? = true]) +
+ (count Instruments with [mass-power? = true]) + (count Instruments with [power-mass? = true])
+ + (count Instruments with [cost-power? = true]) + (count Instruments with [power-cost? = true]))
 
 
  ;
@@ -221,15 +204,12 @@ Instruments with [cost-mass? = true]) +
  if (tradeFlag = 0) [
  let candidates nobody
  let candidatesList []
- set candidates Instruments with [mass-power? = true or power-cost? = true or
-cost-mass? = true]
+ set candidates Instruments with [mass-power? = true or power-cost? = true or cost-mass? = true]
  set candidatesList (sort candidates)
- ; Iterate Over Each Instrument Eligible for Mass Power, Power Cost, and Cost
-Mass Barter
+ ; Iterate Over Each Instrument Eligible for Mass Power, Power Cost, and Cost Mass Barter
  ; For Each Pair of Eligible Instruments
  ; Calculate Mass, Cost and Power Over and Under Utilizations
- ; Exchange The Average of the Mass, Cost and Power Over and Under
-Utilizations
+ ; Exchange The Average of the Mass, Cost and Power Over and Under Utilizations
  ; Increment the total number of Multi-lateral Barters
  ; If no Trade Occurs, Move on to the Next Trade Type
  ; If a Trade Occurs, Start the doBarter Procedure All Over Again
@@ -240,8 +220,7 @@ Utilizations
  foreach candidatesList [
  let z ?
  if (x != y) or (y != z) or (x != z) [
- if ([mass-power?] of x = true) and ([power-cost?] of y = true) and ([costmass?]
-of z = true) [
+ if ([mass-power?] of x = true) and ([power-cost?] of y = true) and ([costmass?] of z = true) [
  ask x [
  set massHigh mass - initialMass
  set powerLow power - initialPower]
@@ -285,15 +264,12 @@ of z = true) [
  if (tradeFlag = 0) [
  let candidates nobody
  let candidatesList []
- set candidates Instruments with [power-mass? = true or cost-power? = true or
-mass-cost? = true]
+ set candidates Instruments with [power-mass? = true or cost-power? = true or mass-cost? = true]
  set candidatesList (sort candidates)
- ; Iterate Over Each Instrument Eligible for Power Mass, Cost Power, and Mass
-Cost Barter
+ ; Iterate Over Each Instrument Eligible for Power Mass, Cost Power, and Mass Cost Barter
  ; For Each Pair of Eligible Instruments
  ; Calculate Mass, Cost and Power Over and Under Utilizations
- ; Exchange The Average of the Mass, Cost and Power Over and Under
-Utilizations
+ ; Exchange The Average of the Mass, Cost and Power Over and Under Utilizations
  ; Increment the total number of Multi-lateral Barters
  ; If no Trade Occurs, Move on to the Next Trade Type
  ; If a Trade Occurs, Start the doBarter Procedure All Over Again
@@ -304,8 +280,7 @@ Utilizations
  foreach candidatesList [
  let z ?
  if (x != y) or (y != z) or (x != z) [
- if ([power-mass?] of x = true) and ([cost-power?] of y = true) and ([masscost?]
-of z = true) [
+ if ([power-mass?] of x = true) and ([cost-power?] of y = true) and ([masscost?] of z = true) [
  ask x [
  set massLow mass - initialMass
  set powerHigh power - initialPower]
@@ -457,8 +432,7 @@ of z = true) [
  ; Calculate Power and Cost Over and Under Utilizations
  ; Exchange The Average of the Power and Cost Over and Under Utilizations
  ; Increment the total number of Cost Power Bilateral Barters
- ; If no Trade Occurs, Exit the doBarter Procedure and Increment Time in the
-Step Procedure
+ ; If no Trade Occurs, Exit the doBarter Procedure and Increment Time in the Step Procedure
  ; If a Trade Occurs, Start the doBarter Procedure All Over Again
  foreach candidatesList [
  let x ?
