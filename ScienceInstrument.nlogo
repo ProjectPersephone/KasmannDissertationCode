@@ -116,13 +116,13 @@ to currentResourceValues
  ;
 
  ask Instruments [
- let co initialCost
- let dc ((deltaCost / 100) * initialCost) / (0.75 * maxTime)
- ifelse (tickcount = 0) [
- set cost co]
- [ifelse (tickcount > 0.75 * maxTime) [
- set cost cost]
- [set cost cost + dc]
+  let co initialCost
+  let dc ((deltaCost / 100) * initialCost) / (0.75 * maxTime)
+  ifelse (tickcount = 0) [
+   set cost co]
+   [ ifelse (tickcount > 0.75 * maxTime) [
+       set cost cost]
+       [set cost cost + dc]
  ]
 
  let mo initialMass
@@ -130,17 +130,17 @@ to currentResourceValues
  ifelse (tickcount = 0) [
  set mass mo]
  [ifelse (tickcount > 0.75 * maxTime) [
- set mass mass]
- [set mass mass + dm]
+  set mass mass]
+  [set mass mass + dm]
  ]
 
  let po initialPower
  let dp ((deltaPower / 100) * initialPower) / (0.75 * maxTime)
  ifelse (tickcount = 0) [
- set power po]
- [ifelse (tickcount > 0.75 * maxTime) [
- set power power]
- [set power power + dp]
+  set power po]
+  [ifelse (tickcount > 0.75 * maxTime) [
+   set power power]
+   [set power power + dp]
  ]
  ]
 end
@@ -175,18 +175,18 @@ to doBarter
  ]
  ask Instruments [
  if (mass > initialMass + (initialMass * THRESHOLD)) and (cost < initialCost - (initialCost * THRESHOLD))
- [set mass-cost? true]
+  [set mass-cost? true]
  if (mass < initialMass - (initialMass * THRESHOLD)) and (cost > initialCost + (initialCost * THRESHOLD))
- [set cost-mass? true]
+  [set cost-mass? true]
  if (mass > initialMass + (initialMass * THRESHOLD)) and (power < initialPower - (initialPower * THRESHOLD))
- [set mass-power? true]
+  [set mass-power? true]
  if (mass < initialMass - (initialMass * THRESHOLD)) and (power >
-initialPower + (initialPower * THRESHOLD))
- [set power-mass? true]
+    initialPower + (initialPower * THRESHOLD))
+  [set power-mass? true]
  if (cost > initialCost + (initialCost * THRESHOLD)) and (power < initialPower - (initialPower * THRESHOLD))
- [set cost-power? true]
+  [set cost-power? true]
  if (cost < initialCost - (initialCost * THRESHOLD)) and (power > initialPower + (initialPower * THRESHOLD))
- [set power-cost? true]
+  [set power-cost? true]
  ]
 
  ;
@@ -202,10 +202,10 @@ initialPower + (initialPower * THRESHOLD))
  ; Conduct M?P? with P?C? with C?M? Multi-lateral Barter
  ;
  if (tradeFlag = 0) [
- let candidates nobody
- let candidatesList []
- set candidates Instruments with [mass-power? = true or power-cost? = true or cost-mass? = true]
- set candidatesList (sort candidates)
+  let candidates nobody
+  let candidatesList []
+  set candidates Instruments with [mass-power? = true or power-cost? = true or cost-mass? = true]
+  set candidatesList (sort candidates)
  ; Iterate Over Each Instrument Eligible for Mass Power, Power Cost, and Cost Mass Barter
  ; For Each Pair of Eligible Instruments
  ; Calculate Mass, Cost and Power Over and Under Utilizations
@@ -213,42 +213,42 @@ initialPower + (initialPower * THRESHOLD))
  ; Increment the total number of Multi-lateral Barters
  ; If no Trade Occurs, Move on to the Next Trade Type
  ; If a Trade Occurs, Start the doBarter Procedure All Over Again
- foreach candidatesList [
- let x ?
- foreach candidatesList [
- let y ?
- foreach candidatesList [
- let z ?
- if (x != y) or (y != z) or (x != z) [
- if ([mass-power?] of x = true) and ([power-cost?] of y = true) and ([costmass?] of z = true) [
- ask x [
- set massHigh mass - initialMass
- set powerLow power - initialPower]
- ask y [
- set powerHigh power - initialPower
- set costLow cost - initialCost]
- ask z [
- set costHigh cost - initialCost
- set massLow mass - initialMass]
- set barterMass ((massHigh - massLow) / 2)
- set barterPower ((powerHigh - powerLow) / 2)
- set barterCost ((costHigh - costLow) / 2)
- ask x [
- set mass mass - barterMass
- set power power + barterPower]
- ask y [
- set power power - barterPower
- set cost cost + barterCost]
- ask z [
- set cost cost - barterCost
- set mass mass + barterMass]
+  foreach candidatesList [
+  let x ?
+  foreach candidatesList [
+  let y ?
+  foreach candidatesList [
+  let z ?
+  if (x != y) or (y != z) or (x != z) [
+   if ([mass-power?] of x = true) and ([power-cost?] of y = true) and ([costmass?] of z = true) [
+    ask x [
+     set massHigh mass - initialMass
+     set powerLow power - initialPower]
+  ask y [
+  set powerHigh power - initialPower
+  set costLow cost - initialCost]
+  ask z [
+   set costHigh cost - initialCost
+   set massLow mass - initialMass]
+   set barterMass ((massHigh - massLow) / 2)
+   set barterPower ((powerHigh - powerLow) / 2)
+   set barterCost ((costHigh - costLow) / 2)
+   ask x [
+    set mass mass - barterMass
+    set power power + barterPower]
+   ask y [
+   set power power - barterPower
+   set cost cost + barterCost]
+   ask z [
+     set cost cost - barterCost
+     set mass mass + barterMass]
  ;ask x [set mass-power? false]
  ;ask y [set power-cost? false]
  ;ask z [set cost-mass? false]
- set totalMultilateralBarters totalMultilateralBarters + 1
- set tradeFlag 1
- ]
- ]
+   set totalMultilateralBarters totalMultilateralBarters + 1
+   set tradeFlag 1
+   ]
+  ]
  ]
  ]
  ]
